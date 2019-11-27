@@ -36,8 +36,8 @@ public class FormActivity extends AppCompatActivity {
         button_red=findViewById(R.id.button_red);
         task = (Task) getIntent().getSerializableExtra(RESULT_KEY);
         if (task!=null) {
-            editTitle.setText(task.getTitle());
-            editDesc.setText(task.getDesc());
+                editTitle.setText(task.getTitle());
+                editDesc.setText(task.getDesc());
             isShow = true;
            button_red.setText("Редактировать");
 

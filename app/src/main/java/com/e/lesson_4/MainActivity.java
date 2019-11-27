@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -24,8 +25,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.e.lesson_4.auth.PhoneActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
 
 import org.apache.commons.io.FileUtils;
 
@@ -59,6 +63,10 @@ public class MainActivity extends AppCompatActivity
             finish();
             return;
         }
+        if(FirebaseAuth.getInstance().getCurrentUser()==null){
+            startActivity(new Intent(this, PhoneActivity.class));
+            return;
+        }
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -71,12 +79,22 @@ public class MainActivity extends AppCompatActivity
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        View headerview=navigationView.getHeaderView(0);
+        View header=headerview.findViewById(R.id.header);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               startActivity(new Intent(MainActivity.this,ProfileActivity.class));
+            }
+        });
+        ImageView imageView=headerview.findViewById(R.id.imageView);
         InitList();
         initFile();
     }
@@ -112,7 +130,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void InitList() {
-        list = App.getDatabase().taskDao().getAll();
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -202,18 +219,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-//        if (id1 == R.id.sort){
-//            Comparator<Task> tasks = new Comparator<Task>() {
-//                @Override
-//                public int compare(Task task, Task t1) {
-//                    int res = String.CASE_INSENSITIVE_ORDER.compare(task.getTitle(), t1.getTitle());
-//                    return (res != 0) ? res : task.getTitle().compareTo(t1.getTitle());
-//                }
-//            };
-//            Collections.sort(list, tasks);
-
-
-            //noinspection SimplifiableIfStatement
 
             if (id == R.id.Settings) {
                 SharedPreferences preferences = getSharedPreferences("Settings", MODE_PRIVATE);
@@ -226,6 +231,9 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
 
+            }else if(id==R.id.action_sign_out){
+                FirebaseAuth.getInstance().signOut();
+                finish();
             }
             return super.onOptionsItemSelected(item);
         }

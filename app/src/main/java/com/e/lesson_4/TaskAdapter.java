@@ -66,8 +66,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         TextView textTitle;
         TextView textDesc;
         Task task;
-//        View.OnLongClickListener onLongClickListener;
-//        OnItemClickListener onItemClickListener;
+
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -91,8 +90,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
         public void bind (Task task){
             this.task=task;
-          //  this.onItemClickListener = onItemClickListener;
-           // this.onLongClickListener= (View.OnLongClickListener) onItemLongClickListener;
             textTitle.setText(task.getTitle());
             textDesc.setText(task.getDesc());
         }
